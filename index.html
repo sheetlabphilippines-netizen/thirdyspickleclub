@@ -1,32 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThirdysPickleClub</title>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#041F18">
+
+  <title>Thirdy's Pickleball Court</title>
+
   <style>
-    * {
+    html,
+    body {
+      width: 100%;
+      height: 100%;
       margin: 0;
-      padding: 0;
+      background: #041F18;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    #bookingApp {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      border: 0;
+      background: #041F18;
+    }
+
+    .opening-screen {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: white;
+      text-align: center;
       box-sizing: border-box;
     }
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #041126; /* Matches your premium deep river dark background */
+
+    .opening-screen div {
+      max-width: 360px;
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+
+    .opening-screen p {
+      color: #d7e6d9;
+    }
+
+    .opening-screen a {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      border-radius: 10px;
+      color: #041f18;
+      background: #e6c312;
+      font-weight: 800;
+      text-decoration: none;
     }
   </style>
 </head>
+
 <body>
+  <div class="opening-screen" id="openingScreen">
+    <div>
+      <h2>Opening booking system…</h2>
+      <p>You will be redirected automatically.</p>
 
-  <iframe src="https://script.google.com/macros/s/AKfycbysuii9WV-mmQqzBSq_iJrUBg0Yy9eiXK_QMgsrY_twVUE-89sDXlatj70QFU92dy1i/exec" allow="geolocation; microphone; camera; midi; encrypted-media;"></iframe>
+      <a id="manualOpenButton" href="#">
+        Open booking system
+      </a>
+    </div>
+  </div>
 
+  <iframe
+    id="bookingApp"
+    title="Thirdy's Pickleball Court Booking"
+    referrerpolicy="strict-origin-when-cross-origin"
+    hidden
+  ></iframe>
+
+  <script>
+    (() => {
+      const GAS_URL =
+        'https://script.google.com/macros/s/AKfycbysuii9WV-mmQqzBSq_iJrUBg0Yy9eiXK_QMgsrY_twVUE-89sDXlatj70QFU92dy1i/exec';
+
+      const userAgent = navigator.userAgent || '';
+
+      const isIOS =
+        /iPhone|iPad|iPod/i.test(userAgent) ||
+        (
+          navigator.platform === 'MacIntel' &&
+          navigator.maxTouchPoints > 1
+        );
+
+      const isMetaInAppBrowser =
+        /FBAN|FBAV|FB_IAB|FBIOS|Instagram/i.test(userAgent);
+
+      const openingScreen =
+        document.getElementById('openingScreen');
+
+      const iframe =
+        document.getElementById('bookingApp');
+
+      const manualButton =
+        document.getElementById('manualOpenButton');
+
+      manualButton.href = GAS_URL;
+
+      /*
+       * Facebook and Instagram on iOS:
+       * Open GAS as the top-level page instead of an iframe.
+       */
+      if (isIOS && isMetaInAppBrowser) {
+        window.location.replace(GAS_URL);
+        return;
+      }
+
+      /*
+       * Other browsers:
+       * Continue displaying GAS through the custom domain iframe.
+       */
+      iframe.src = GAS_URL;
+      iframe.hidden = false;
+      openingScreen.hidden = true;
+    })();
+  </script>
 </body>
 </html>
